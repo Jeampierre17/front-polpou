@@ -18,15 +18,28 @@ const CartModal: React.FC<CartModalProps> = ({ show, onClose }) => {
         <span className="text-pink-200 font-semibold text-2xl flex items-center gap-2">✅ Cargando carrito...</span>
       </div>
     }>
-      <Transition show={show} as={React.Fragment}>
-        <Dialog as="div" className="fixed inset-0 z-[100] overflow-y-auto" onClose={onClose}>
+      <Transition show={show} as={React.Fragment}
+        enter="transition-all duration-700 ease-in-out"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="transition-all duration-600 ease-in-out"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+
+        <Dialog as="div" className="fixed inset-0 z-[100] overflow-y-auto"
+
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.10) 100%)',
+            backdropFilter: 'blur(2px)',
+            transition: 'background 0.7s cubic-bezier(.28,.84,.42,1)'
+          }}
+          onClose={onClose}>
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             {/* Fondo oscuro */}
             <Transition
               show={show}
               as={React.Fragment}
-              enter="transition-opacity duration-500" enterFrom="opacity-0" enterTo="opacity-100"
-              leave="transition-opacity duration-400" leaveFrom="opacity-100" leaveTo="opacity-0"
             >
               <div className="fixed inset-0 bg-black bg-opacity-40 transition-opacity" />
             </Transition>
@@ -35,8 +48,12 @@ const CartModal: React.FC<CartModalProps> = ({ show, onClose }) => {
             <Transition
               show={show}
               as={React.Fragment}
-              enter="transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" enterFrom="opacity-0 translate-y-12 sm:translate-y-0 sm:scale-95" enterTo="opacity-100 translate-y-0 sm:scale-100"
-              leave="transition-all duration-400 ease-[cubic-bezier(0.55,0,0.1,1)]" leaveFrom="opacity-100 translate-y-0 sm:scale-100" leaveTo="opacity-0 translate-y-12 sm:translate-y-0 sm:scale-95"
+              enter="transition-all duration-700 ease-in-out"
+              enterFrom="opacity-0 translate-y-8 sm:scale-95"
+              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              leave="transition-all duration-600 ease-in-out"
+              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+              leaveTo="opacity-0 translate-y-8 sm:scale-95"
             >
               <div className="inline-block align-bottom bg-white dark:bg-gray-700 rounded-3xl px-6 pt-8 pb-6 text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle w-full max-w-lg md:max-w-xl">
                 <div className="flex items-center justify-between mb-6">
@@ -78,10 +95,10 @@ const CartModal: React.FC<CartModalProps> = ({ show, onClose }) => {
                                 aria-label="Aumentar cantidad"
                               >+</button>
                             </div>
-                            
+
                           </div><div className="text-pink-800 font-quicksand dark:text-pink-400 font-bold text-lg md:text-xl mt-1">
-                              {(item.price * item.quantity).toLocaleString('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                            </div>
+                            {(item.price * item.quantity).toLocaleString('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          </div>
                         </div>
                       ))}
                     </div>

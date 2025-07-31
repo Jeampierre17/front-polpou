@@ -1,5 +1,5 @@
-import React, { useState, useRef, memo, useEffect } from 'react';
-import { PlusCircleIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
+import React, { useState,  memo, useEffect } from 'react';
+import { PlusCircleIcon} from '@heroicons/react/24/outline';
 import { toast } from 'sonner';
 import type { Product } from '../types';
 import { motion } from 'framer-motion';

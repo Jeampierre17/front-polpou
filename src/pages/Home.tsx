@@ -19,7 +19,9 @@ const Home: React.FC<{ onNavigate: (page: 'home' | 'kanban' | 'products' | 'them
       <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-gradient-to-r from-pink-100/80 via-white to-indigo-100/80 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 rounded-3xl shadow-xl p-8">
         <div className="flex-1 text-center md:text-left">
           <h1 className="text-4xl md:text-5xl font-extrabold text-pink-600 dark:text-pink-400 mb-4 tracking-tight drop-shadow font-quicksand"> Kanban & Productos</h1>
-          <p className="text-lg md:text-xl text-gray-700 dark:text-gray-200 mb-6 max-w-xl mx-auto md:mx-0">Organiza tareas y productos de forma visual, rápida y moderna. ¡Explora el tablero Kanban y el catálogo de productos con la mejor experiencia!</p>
+          <p className="text-lg md:text-xl text-gray-700 dark:text-gray-200  max-w-2xl mx-auto md:mx-0">Organiza tareas y productos de forma visual, rápida y moderna. </p>
+          <p className="text-lg md:text-xl text-gray-700 dark:text-gray-200 mb-6 max-w-lg mx-auto md:mx-0">¡Explora el tablero Kanban y el catálogo de productos con la mejor experiencia!</p>
+
           <div className="flex flex-wrap gap-4 justify-center md:justify-start">
             <Link to="/kanban" className="px-6 py-3 rounded-lg bg-pink-600 hover:bg-pink-700 text-white font-semibold shadow transition mr-2">Ir al Kanban</Link>
             <Link to="/products" className="px-6 py-3 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold shadow transition">Ver Productos</Link>

@@ -1,6 +1,6 @@
-import { PageTitleProvider, usePageTitle } from './hooks/usePageTitle';
+import { PageTitleProvider } from './hooks/usePageTitle';
 import { Toaster } from 'sonner';
-import React, { Suspense, useEffect } from 'react';
+import  {Suspense}  from 'react';
 import Layout from './components/Layout';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import Kanban from './pages/Kanban';
@@ -11,7 +11,6 @@ import { ThemeProvider } from './hooks/useTheme';
 import { Routes, Route } from 'react-router-dom';
 import LoadingSpinner from './components/LoadingSpinner';
 import Home from './pages/Home';
-
 
 
 

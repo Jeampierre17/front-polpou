@@ -3,7 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import AnimatedPage from './AnimatedPage';
 import { Link } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
-import { HomeIcon, ViewColumnsIcon, ShoppingBagIcon, SwatchIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, ViewColumnsIcon, ShoppingBagIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const navigationItems = [
   { path: '/', label: 'Inicio', icon: HomeIcon },
