@@ -7,10 +7,9 @@ interface VirtualizedProductListProps {
   products: Product[];
   onAddToCart: (id: number) => void;
   height?: number;
-  itemHeight?: number;
 }
 
-const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({ products, onAddToCart, height = 1020, itemHeight = 340 }) => {
+const VirtualizedProductList: React.FC<VirtualizedProductListProps> = ({ products, onAddToCart, height = 1020 }) => {
   // height: visible area height, itemHeight: height of each product row
   const Row = React.useCallback(({ index, style }: { index: number; style: React.CSSProperties }) => {
     const product = products[index];

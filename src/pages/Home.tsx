@@ -3,7 +3,7 @@ import { usePageTitle } from '../hooks/usePageTitle';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-const Home: React.FC<{ onNavigate: (page: 'home' | 'kanban' | 'products' | 'theme') => void }> = ({ onNavigate }) => {
+const Home: React.FC<{ onNavigate: (page: 'home' | 'kanban' | 'products' | 'theme') => void }> = () => {
   const { setPageTitle } = usePageTitle();
   useEffect(() => { setPageTitle('Bienvenido'); }, [setPageTitle]);
 

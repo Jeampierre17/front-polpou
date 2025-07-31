@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { toast } from 'sonner';
 import { useCart } from '../hooks/useCart';
@@ -10,6 +10,15 @@ interface CartModalProps {
 
 const CartModal: React.FC<CartModalProps> = ({ show, onClose }) => {
   const { cart, incrementCartItem, decrementCartItem, clearCart } = useCart();
+  const [closing, setClosing] = useState(false);
+
+  const handleClose = () => {
+    setClosing(true);
+    setTimeout(() => {
+      setClosing(false);
+      onClose();
+    }, 300); // Duración igual a la animación
+  };
 
   return (
     <Suspense fallback={
@@ -18,7 +27,9 @@ const CartModal: React.FC<CartModalProps> = ({ show, onClose }) => {
         <span className="text-pink-200 font-semibold text-2xl flex items-center gap-2">✅ Cargando carrito...</span>
       </div>
     }>
-      <Transition show={show} as={React.Fragment}
+      <Transition
+        show={show}
+        as={React.Fragment}
         enter="transition-all duration-700 ease-in-out"
         enterFrom="opacity-0"
         enterTo="opacity-100"
@@ -28,7 +39,6 @@ const CartModal: React.FC<CartModalProps> = ({ show, onClose }) => {
       >
 
         <Dialog as="div" className="fixed inset-0 z-[100] overflow-y-auto"
-
           style={{
             background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.10) 100%)',
             backdropFilter: 'blur(2px)',
@@ -40,6 +50,12 @@ const CartModal: React.FC<CartModalProps> = ({ show, onClose }) => {
             <Transition
               show={show}
               as={React.Fragment}
+              enter="transition-opacity duration-900 ease-[cubic-bezier(.28,.84,.42,1)]"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition-opacity duration-700 ease-[cubic-bezier(.55,0,.1,1)]"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
             >
               <div className="fixed inset-0 bg-black bg-opacity-40 transition-opacity" />
             </Transition>
@@ -49,19 +65,22 @@ const CartModal: React.FC<CartModalProps> = ({ show, onClose }) => {
               show={show}
               as={React.Fragment}
               enter="transition-all duration-900 ease-[cubic-bezier(.28,.84,.42,1)]"
-              enterFrom="opacity-0 translate-y-8 sm:scale-95 blur-sm"
+              enterFrom="opacity-0 translate-y-12 sm:scale-95 blur-sm"
               enterTo="opacity-100 translate-y-0 sm:scale-100 blur-0"
               leave="transition-all duration-700 ease-[cubic-bezier(.55,0,.1,1)]"
               leaveFrom="opacity-100 translate-y-0 sm:scale-100 blur-0"
-              leaveTo="opacity-0 translate-y-8 sm:scale-95 blur-sm"
+              leaveTo="opacity-0 translate-y-12 sm:scale-95 blur-sm"
             >
-              <div className="inline-block align-bottom bg-white dark:bg-gray-700 rounded-3xl px-6 pt-8 pb-6 text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle w-full max-w-lg md:max-w-xl">
+              <div
+                className={`inline-block align-bottom bg-white dark:bg-gray-700 rounded-3xl px-6 pt-8 pb-6 text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle w-full max-w-lg md:max-w-xl
+                  ${closing ? 'animate-[zoomOut_0.3s_ease-in_forwards]' : 'animate-[zoomIn_0.3s_ease-out_forwards]'}`}
+              >
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
                     <span className="text-3xl md:text-4xl text-pink-600">🛒</span>
                     <Dialog.Title as="h3" className="text-2xl md:text-3xl font-bold leading-7 text-gray-900 dark:text-white">Carrito</Dialog.Title>
                   </div>
-                  <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                  <button onClick={handleClose} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                     <span className="text-2xl">×</span>
                   </button>
                 </div>

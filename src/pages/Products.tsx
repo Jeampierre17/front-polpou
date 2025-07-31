@@ -4,7 +4,6 @@ import { usePageTitle } from '../hooks/usePageTitle';
 import { useCart } from '../hooks/useCart';
 import { useProducts } from '../hooks/useProducts';
 import type { Product } from '../types';
-import { Dialog, Transition } from '@headlessui/react';
 import CartModal from '../components/CartModal';
 import { useSearchParams } from 'react-router-dom';
 import ProductFilters from '../components/ProductFilters';
@@ -22,7 +21,7 @@ const Products: React.FC = () => {
   useEffect(() => { setPageTitle('Catálogo de Productos'); }, [setPageTitle]);
   // Productos, filtros y loading centralizados en el hook
   const { products, isLoading, isError, filters, setFilters } = useProducts();
-  const { cart, addToCart, clearCart, incrementCartItem, decrementCartItem } = useCart();
+  const { cart, addToCart} = useCart();
   const [showCart, setShowCart] = useState(false);
   // Paginación
   const PRODUCTS_PER_PAGE = 20;
@@ -168,7 +167,6 @@ const Products: React.FC = () => {
                   products={paginatedProducts}
                   onAddToCart={handleAddToCart}
                   height={Math.min(3, paginatedProducts.length) * 340 + 16}
-                  itemHeight={340}
                 />
               </Suspense>
             </div>

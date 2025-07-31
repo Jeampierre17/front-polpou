@@ -63,20 +63,6 @@ const TaskCard: React.FC<TaskCardProps> = ({
     }
   };
 
-  const handleSave = () => {
-    onUpdateTask(task.id, {
-      title: editTitle,
-      description: editDescription,
-    });
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setEditTitle(task.title);
-    setEditDescription(task.description);
-    setIsEditing(false);
-  };
-
   const handleMove = (newStatus: Task["status"]) => {
     if (newStatus !== task.status) {
       onMoveTask(task.id, newStatus);

@@ -12,7 +12,7 @@ interface ProductCardProps {
 }
 
 
-const ProductCard: React.FC<ProductCardProps> = function ProductCard({ product, onAddToCart }) {
+const ProductCard: React.FC<ProductCardProps> = function ProductCard({ product }) {
   const { cart, addToCart, removeFromCart, incrementCartItem, decrementCartItem } = useCart();
   const cartItem = cart.find(item => item.id === product.id);
   const inCart = !!cartItem;
