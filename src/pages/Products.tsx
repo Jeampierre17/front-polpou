@@ -118,8 +118,7 @@ const Products: React.FC = () => {
       {/* Products Grid */}
       <main className="flex-1 px-0 md:px-2 xl:px-0 max-w-full md:max-w-3xl xl:max-w-7xl mx-auto">
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-24 text-center min-h-[340px]">
-            <LoadingSpinner className="mb-6 w-16 h-16 text-pink-500" />
+          <div className="flex flex-col items-center justify-center text-center min-h-[340px]">
             <h3 className="text-2xl font-bold text-pink-600 dark:text-pink-400 mb-2 flex items-center gap-2">Cargando catálogo...</h3>
             <p className="text-gray-500 dark:text-gray-400 mb-4">Por favor espera, estamos trayendo los mejores productos</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mt-8 w-full max-w-7xl">
@@ -162,10 +161,8 @@ const Products: React.FC = () => {
             {/* Mobile: Virtualized List */}
             <div className="block md:hidden">
               <Suspense fallback={
-                <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <svg className="animate-spin h-10 w-10 text-pink-500 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" strokeWidth="4" className="opacity-25" /><path d="M4 12a8 8 0 018-8" strokeWidth="4" className="opacity-75" /></svg>
-                  <span className="text-pink-500 font-semibold text-lg flex items-center gap-2"> Cargando lista de productos...</span>
-                </div>
+                           <LoadingSpinner className="mb-6 w-16 h-16 text-pink-500" />
+
               }>
                 <VirtualizedProductList
                   products={paginatedProducts}
@@ -178,10 +175,7 @@ const Products: React.FC = () => {
             {/* Desktop: Virtualized Grid */}
             <div className="hidden md:block">
               <Suspense fallback={
-                <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <svg className="animate-spin h-10 w-10 text-pink-500 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" strokeWidth="4" className="opacity-25" /><path d="M4 12a8 8 0 018-8" strokeWidth="4" className="opacity-75" /></svg>
-                  <span className="text-pink-500 font-semibold text-lg flex items-center gap-2">✅ Cargando grilla de productos...</span>
-                </div>
+                <LoadingSpinner className="mb-6 w-16 h-16 text-pink-500" />
               }>
                 <VirtualizedProductGrid
                   products={paginatedProducts}
