@@ -48,12 +48,12 @@ const CartModal: React.FC<CartModalProps> = ({ show, onClose }) => {
             <Transition
               show={show}
               as={React.Fragment}
-              enter="transition-all duration-700 ease-in-out"
-              enterFrom="opacity-0 translate-y-8 sm:scale-95"
-              enterTo="opacity-100 translate-y-0 sm:scale-100"
-              leave="transition-all duration-600 ease-in-out"
-              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-              leaveTo="opacity-0 translate-y-8 sm:scale-95"
+              enter="transition-all duration-900 ease-[cubic-bezier(.28,.84,.42,1)]"
+              enterFrom="opacity-0 translate-y-8 sm:scale-95 blur-sm"
+              enterTo="opacity-100 translate-y-0 sm:scale-100 blur-0"
+              leave="transition-all duration-700 ease-[cubic-bezier(.55,0,.1,1)]"
+              leaveFrom="opacity-100 translate-y-0 sm:scale-100 blur-0"
+              leaveTo="opacity-0 translate-y-8 sm:scale-95 blur-sm"
             >
               <div className="inline-block align-bottom bg-white dark:bg-gray-700 rounded-3xl px-6 pt-8 pb-6 text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle w-full max-w-lg md:max-w-xl">
                 <div className="flex items-center justify-between mb-6">
