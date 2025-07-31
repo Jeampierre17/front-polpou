@@ -12,7 +12,7 @@ interface ProductCardProps {
 }
 
 
-const ProductCard: React.FC<ProductCardProps> = function ProductCard({ product }) {
+const ProductCard: React.FC<ProductCardProps> = function ProductCard({ product, onAddToCart }) {
   const { cart, addToCart, removeFromCart, incrementCartItem, decrementCartItem } = useCart();
   const cartItem = cart.find(item => item.id === product.id);
   const inCart = !!cartItem;
@@ -202,12 +202,16 @@ const ProductCard: React.FC<ProductCardProps> = function ProductCard({ product }
         ) : (
           <motion.button
             onClick={() => {
-              addToCart({
-                id: product.id,
-                title: product.title,
-                price: product.price * (1 - (product.discountPercentage || 0) / 100),
-                thumbnail: product.thumbnail ?? ''
-              });
+              if (typeof onAddToCart === 'function') {
+                onAddToCart(product.id);
+              } else {
+                addToCart({
+                  id: product.id,
+                  title: product.title,
+                  price: product.price * (1 - (product.discountPercentage || 0) / 100),
+                  thumbnail: product.thumbnail ?? ''
+                });
+              }
               toast.success(`Agregado al carrito: ${product.title}`);
             }}
             className="w-full flex items-center justify-center gap-2 rounded-md bg-purple-700 hover:bg-purple-800 active:bg-purple-800 text-white font-semibold py-2 md:py-2 mt-2 shadow-md transition disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed text-sm md:text-base"

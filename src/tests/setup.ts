@@ -1,27 +1,35 @@
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
+import { vi } from 'vitest';
+
+// Si quieres accesibilidad en tests, usa jest-axe en los archivos de test.
+// Ejemplo:
+// import { axe, toHaveNoViolations } from 'jest-axe';
+// expect(await axe(container)).toHaveNoViolations();
 
 // Mock para matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation((query: any) => ({
+  value: vi.fn().mockImplementation((query: any) => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
+    addListener: vi.fn(), // deprecated
+    removeListener: vi.fn(), // deprecated
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
   })),
-})
+});
 
 // Mock para localStorage
 const localStorageMock: Storage = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
-  key: jest.fn(),
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+  key: vi.fn(),
   length: 0,
 };
-global.localStorage = localStorageMock;
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock,
+});

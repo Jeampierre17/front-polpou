@@ -9,7 +9,6 @@ import { useSearchParams } from 'react-router-dom';
 import ProductFilters from '../components/ProductFilters';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import SkeletonCard from '../components/SkeletonCard';
-import LoadingSpinner from '../components/LoadingSpinner';
 import { toast } from 'sonner';
 import { Toaster } from 'sonner';
 import { ShoppingCartIcon } from '@heroicons/react/24/solid';
@@ -73,7 +72,29 @@ const Products: React.FC = () => {
 
   return (
     <>
-      <Toaster position="top-right" richColors closeButton />
+      {/* Solo un Toaster personalizado, eliminar duplicados */}
+      <Toaster
+        position="top-right"
+        richColors
+        closeButton
+        gap={18}
+        toastOptions={{
+          style: {
+            background: '#ec4899',
+            color: '#fff',
+            minWidth: '220px',
+            maxWidth: '320px',
+            fontWeight: 500,
+            fontFamily: 'Quicksand, Arial, sans-serif',
+            boxShadow: '0 2px 16px 0 rgba(236,72,153,0.10)',
+            borderRadius: '0.75rem',
+            marginTop: '8px',
+            marginBottom: '8px',
+            alignItems: 'center',
+            display: 'flex',
+          },
+        }}
+      />
       <motion.div
         className="h-full"
         initial={{ opacity: 0, y: 24 }}
@@ -116,8 +137,16 @@ const Products: React.FC = () => {
 
       {/* Products Grid */}
       <main className="flex-1 px-0 md:px-2 xl:px-0 max-w-full md:max-w-3xl xl:max-w-7xl mx-auto">
+  
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center text-center min-h-[340px]">
+          <motion.div
+            key="loading"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.38, ease: 'easeInOut' }}
+            className="flex flex-col items-center justify-center text-center min-h-[340px]"
+          >
             <h3 className="text-2xl font-bold text-pink-600 dark:text-pink-400 mb-2 flex items-center gap-2">Cargando catálogo...</h3>
             <p className="text-gray-500 dark:text-gray-400 mb-4">Por favor espera, estamos trayendo los mejores productos</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mt-8 w-full max-w-7xl">
@@ -125,7 +154,7 @@ const Products: React.FC = () => {
                 <SkeletonCard key={i} />
               ))}
             </div>
-          </div>
+          </motion.div>
         ) : isError ? (
           <div className="flex flex-col items-center justify-center py-24 text-center min-h-[340px]">
             <svg width="56" height="56" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="mb-5 text-red-400 dark:text-red-500 animate-bounce">
@@ -160,8 +189,23 @@ const Products: React.FC = () => {
             {/* Mobile: Virtualized List */}
             <div className="block md:hidden">
               <Suspense fallback={
-                           <LoadingSpinner className="mb-6 w-16 h-16 text-pink-500" />
-
+                <motion.div
+                  className="flex items-center justify-center w-full h-[180px]"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, ease: 'easeInOut' }}
+                >
+                  <motion.div
+                    className="rounded-full bg-pink-100 dark:bg-pink-900 p-4 shadow-lg"
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1.2, ease: 'linear' }}
+                  >
+                    <svg className="w-10 h-10 text-pink-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" strokeOpacity="0.2" />
+                      <path d="M12 2a10 10 0 0 1 10 10" />
+                    </svg>
+                  </motion.div>
+                </motion.div>
               }>
                 <VirtualizedProductList
                   products={paginatedProducts}
@@ -173,7 +217,23 @@ const Products: React.FC = () => {
             {/* Desktop: Virtualized Grid */}
             <div className="hidden md:block">
               <Suspense fallback={
-                <LoadingSpinner className="mb-6 w-16 h-16 text-pink-500" />
+                <motion.div
+                  className="flex items-center justify-center w-full h-[180px]"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, ease: 'easeInOut' }}
+                >
+                  <motion.div
+                    className="rounded-full bg-pink-100 dark:bg-pink-900 p-4 shadow-lg"
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1.2, ease: 'linear' }}
+                  >
+                    <svg className="w-10 h-10 text-pink-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" strokeOpacity="0.2" />
+                      <path d="M12 2a10 10 0 0 1 10 10" />
+                    </svg>
+                  </motion.div>
+                </motion.div>
               }>
                 <VirtualizedProductGrid
                   products={paginatedProducts}

@@ -22,7 +22,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { pageTitle } = usePageTitle();
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200 flex flex-col">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200 flex flex-col relative">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -83,10 +83,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation Overlay */}
         {mobileMenuOpen && (
-          <nav className="md:hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 py-4">
-            <div className="flex flex-col space-y-2">
+          <nav className="fixed inset-0 z-50 md:hidden bg-white dark:bg-gray-900 bg-opacity-95 flex flex-col justify-center items-center transition-all duration-300">
+            <div className="flex flex-col space-y-4 w-full max-w-xs mx-auto">
               {navigationItems.map((item) => {
                 const isActive = location.pathname === item.path;
                 const Icon = item.icon;
@@ -95,13 +95,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     key={item.path}
                     to={item.path}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
+                    className={`flex items-center space-x-3 px-6 py-4 rounded-lg text-lg font-bold transition-colors duration-200 ${
                       isActive
                         ? 'bg-purple-100 dark:bg-pink-700 text-pink-700 dark:text-pink-200'
-                        : 'text-light-700 dark:text-light-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800'
                     }`}
                   >
-                    <Icon className="w-5 h-5" />
+                    <Icon className="w-6 h-6" />
                     <span>{item.label}</span>
                   </Link>
                 );

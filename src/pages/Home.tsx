@@ -9,12 +9,13 @@ const Home: React.FC<{ onNavigate: (page: 'home' | 'kanban' | 'products' | 'them
 
   return (
     <motion.div 
-    className="space-y-12 max-w-5xl mx-auto px-4 py-10"
-    initial={{ opacity: 0, y: 24 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -24 }}
-    transition={{ duration: 0.35, ease: 'easeInOut' }}
+      className="space-y-12 max-w-5xl mx-auto px-4 py-10"
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -24 }}
+      transition={{ duration: 0.35, ease: 'easeInOut' }}
     >
+
       {/* Hero Section */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-gradient-to-r from-pink-100/80 via-white to-indigo-100/80 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 rounded-3xl shadow-xl p-8">
         <div className="flex-1 text-center md:text-left">
@@ -143,6 +144,16 @@ const Home: React.FC<{ onNavigate: (page: 'home' | 'kanban' | 'products' | 'them
             <h4 className="font-semibold text-gray-900 dark:text-white text-base">Vite 5</h4>
             <span className="block text-xs text-gray-500 dark:text-gray-400 mt-1">Build Tool</span>
           </div>
+          <div className="text-center p-4 rounded-lg bg-green-50 dark:bg-green-900 shadow">
+            <div className="text-3xl mb-2">📱</div>
+            <h4 className="font-semibold text-gray-900 dark:text-white text-base">PWA</h4>
+            <span className="block text-xs text-gray-500 dark:text-gray-400 mt-1">Progressive Web App</span>
+          </div>
+          <div className="text-center p-4 rounded-lg bg-gray-50 dark:bg-gray-800 shadow">
+            <div className="text-3xl mb-2">🛡️</div>
+            <h4 className="font-semibold text-gray-900 dark:text-white text-base">Service Worker</h4>
+            <span className="block text-xs text-gray-500 dark:text-gray-400 mt-1">Offline & Cache</span>
+          </div>
           <div className="text-center p-4 rounded-lg bg-blue-100 dark:bg-blue-900 shadow">
             <div className="text-3xl mb-2">⚛️</div>
             <h4 className="font-semibold text-gray-900 dark:text-white text-base">React 19</h4>
@@ -157,6 +168,16 @@ const Home: React.FC<{ onNavigate: (page: 'home' | 'kanban' | 'products' | 'them
             <div className="text-3xl mb-2">🎨</div>
             <h4 className="font-semibold text-gray-900 dark:text-white text-base">Tailwind CSS</h4>
             <span className="block text-xs text-gray-500 dark:text-gray-400 mt-1">Estilos & Responsive</span>
+          </div>
+          <div className="text-center p-4 rounded-lg bg-pink-50 dark:bg-pink-900 shadow">
+            <div className="text-3xl mb-2">🎬</div>
+            <h4 className="font-semibold text-gray-900 dark:text-white text-base">Framer Motion</h4>
+            <span className="block text-xs text-gray-500 dark:text-gray-400 mt-1">Animaciones avanzadas</span>
+          </div>
+          <div className="text-center p-4 rounded-lg bg-orange-50 dark:bg-orange-900 shadow">
+            <div className="text-3xl mb-2">🔔</div>
+            <h4 className="font-semibold text-gray-900 dark:text-white text-base">Sonner</h4>
+            <span className="block text-xs text-gray-500 dark:text-gray-400 mt-1">Notificaciones modernas</span>
           </div>
           {/* UI/UX */}
           <div className="text-center p-4 rounded-lg bg-purple-100 dark:bg-purple-900 shadow">
@@ -237,7 +258,30 @@ const Home: React.FC<{ onNavigate: (page: 'home' | 'kanban' | 'products' | 'them
         </div>
       </div>
 
-    
+          {/* Cuadros de verificación de calidad */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 flex flex-col items-center">
+          <div className="text-3xl mb-2">✅</div>
+          <h4 className="font-bold text-pink-600 dark:text-pink-400 mb-1">Unit tests</h4>
+          <span className="text-xs text-gray-500 dark:text-gray-400 mb-2">Componentes críticos</span>
+        </div>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 flex flex-col items-center">
+          <div className="text-3xl mb-2">✅</div>
+          <h4 className="font-bold text-indigo-600 dark:text-indigo-400 mb-1">Integration tests</h4>
+          <span className="text-xs text-gray-500 dark:text-gray-400 mb-2">Flujos de usuario</span>
+        </div>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 flex flex-col items-center">
+          <div className="text-3xl mb-2">🦾</div>
+          <h4 className="font-bold text-green-600 dark:text-green-400 mb-1">Accesibilidad (A11y)</h4>
+          <span className="text-xs text-gray-500 dark:text-gray-400 mb-2 text-center">Validado con <b>axe-core</b> y <b>jest-axe</b></span>
+        </div>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 flex flex-col items-center">
+          <div className="text-3xl mb-2">✅</div>
+          <h4 className="font-bold text-blue-600 dark:text-blue-400 mb-1">Performance</h4>
+          <span className="text-xs text-gray-500 dark:text-gray-400 mb-2">Lighthouse</span>
+          <a href="/lighthouse-report.html" target="_blank" rel="noopener" className="mt-2 px-4 py-2 rounded bg-blue-500 text-white text-xs font-semibold shadow hover:bg-blue-600">Ver reporte</a>
+        </div>
+      </div>
     </motion.div>
   );
 };

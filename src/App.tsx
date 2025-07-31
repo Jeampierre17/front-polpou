@@ -1,5 +1,5 @@
+// import { Toaster } from 'sonner';
 import { PageTitleProvider } from './hooks/usePageTitle';
-import { Toaster } from 'sonner';
 import  {Suspense}  from 'react';
 import Layout from './components/Layout';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -8,28 +8,31 @@ import Products from './pages/Products';
 import ThemeDemo from './components/ThemeDemo';
 import NotFound from './pages/NotFound';
 import { ThemeProvider } from './hooks/useTheme';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import LoadingSpinner from './components/LoadingSpinner';
 import Home from './pages/Home';
 
 
 
 function App() {
+  const location = useLocation();
   return (
     <ThemeProvider>
       <PageTitleProvider>
         <ErrorBoundary fallback={<Layout><ErrorFallback /></Layout>}>
           <Layout>
-            <Toaster position="top-right" richColors closeButton />
-            <Suspense fallback={<LoadingSpinner />}>
-              <Routes>
-                <Route path="/" element={<Home onNavigate={() => {}} />} />
-                <Route path="/kanban" element={<Kanban />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/theme" element={<ThemeDemo />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
+            <AnimatePresence mode="wait" initial={false}>
+              <Suspense fallback={<LoadingSpinner />}>
+                <Routes location={location} key={location.pathname}>
+                  <Route path="/" element={<Home onNavigate={() => {}} />} />
+                  <Route path="/kanban" element={<Kanban />} />
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/theme" element={<ThemeDemo />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </AnimatePresence>
           </Layout>
         </ErrorBoundary>
       </PageTitleProvider>

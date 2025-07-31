@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import type { ProductFilters as ProductFiltersType } from '../types';
-import { Dialog, Transition, Listbox } from '@headlessui/react';
+import { Dialog, Transition, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react';
 import { FunnelIcon, ChevronUpDownIcon, CheckIcon, XMarkIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarSolid } from '@heroicons/react/24/solid';
 
@@ -147,23 +147,23 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                   <div className="flex-1 min-w-[120px]">
                     <Listbox value={filters.sortBy} onChange={handleSortChange}>
                       <div className="relative">
-                        <Listbox.Button className="w-full flex items-center gap-2 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-800 text-xs text-gray-900 dark:text-gray-100">
+                        <ListboxButton className="w-full flex items-center gap-2 px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-800 text-xs text-gray-900 dark:text-gray-100">
                           <span className="truncate">{selectedSort.label}</span>
                           <ChevronUpDownIcon className="h-4 w-4 text-gray-400 dark:text-gray-300" />
-                        </Listbox.Button>
+                        </ListboxButton>
                         <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
-                          <Listbox.Options className="absolute z-10 mt-1 max-h-48 w-full overflow-auto rounded-md bg-white dark:bg-gray-800 py-1 text-xs shadow-lg ring-1 ring-black/5 focus:outline-none">
+                          <ListboxOptions className="absolute z-10 mt-1 max-h-48 w-full overflow-auto rounded-md bg-white dark:bg-gray-800 py-1 text-xs shadow-lg ring-1 ring-black/5 focus:outline-none">
                             {sortOptions.map(option => (
-                              <Listbox.Option key={option.value} value={option.value} className={({ active }) => `cursor-pointer select-none py-2 pl-8 pr-2 ${active ? 'bg-purple-100 text-purple-900 dark:bg-purple-900 dark:text-white' : 'text-gray-900 dark:text-gray-100'}`}>
+                              <ListboxOption key={option.value} value={option.value} className={({ active }) => `cursor-pointer select-none py-2 pl-8 pr-2 ${active ? 'bg-purple-100 text-purple-900 dark:bg-purple-900 dark:text-white' : 'text-gray-900 dark:text-gray-100'}`}>
                                 {({ selected }) => (
                                   <>
                                     <span className={`block truncate ${selected ? 'font-semibold' : ''}`}>{option.label}</span>
                                     {selected ? <span className="absolute left-2 top-2 text-purple-600 dark:text-purple-400"><CheckIcon className="w-3 h-3" /></span> : null}
                                   </>
                                 )}
-                              </Listbox.Option>
+                              </ListboxOption>
                             ))}
-                          </Listbox.Options>
+                          </ListboxOptions>
                         </Transition>
                       </div>
                     </Listbox>
