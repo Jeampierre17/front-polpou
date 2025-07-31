@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense, useCallback } from 'react';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { useCart } from '../hooks/useCart';
 import { useProducts } from '../hooks/useProducts';
@@ -38,8 +38,8 @@ const Products: React.FC = () => {
   // Categorías únicas (ya viene de useProducts si lo exporta, si no, mantener esto)
   const categories = Array.from(new Set((products as Product[]).map(p => p.category))).filter((c): c is string => typeof c === 'string');
 
-  // Handler para agregar al carrito
-  const handleAddToCart = (productId: number) => {
+  // Handler para agregar al carrito (memorizado para evitar rerender innecesario de ProductCard)
+  const handleAddToCart = useCallback((productId: number) => {
     const prod = products.find(p => p.id === productId);
     if (!prod) return;
     addToCart({
@@ -48,7 +48,7 @@ const Products: React.FC = () => {
       price: prod.price * (1 - (prod.discountPercentage || 0) / 100),
       thumbnail: prod.thumbnail ?? ''
     });
-  };
+  }, [products, addToCart]);
 
   return (
     <div className="h-full">
