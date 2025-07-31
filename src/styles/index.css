@@ -1,0 +1,151 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&family=Lato:wght@400;500;700&family=Open+Sans:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Forzar Quicksand como fuente sans-serif global de Tailwind, Lato como secundaria y Open Sans como terciaria */
+:root {
+  --tw-font-sans: 'Quicksand', 'Lato', 'Open Sans', sans-serif;
+}
+
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+/* ...existing code... */
+/* Clases globales para fuentes personalizadas */
+.font-quicksand {
+  font-family: 'Quicksand', 'Lato', 'Open Sans', sans-serif;
+}
+.font-lato {
+  font-family: 'Lato', 'Quicksand', 'Open Sans', sans-serif;
+}
+.font-opensans {
+  font-family: 'Open Sans', 'Quicksand', 'Lato', sans-serif;
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* Solo estilos esenciales que no se pueden hacer con clases declarativas */
+
+/* Smooth theme transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Skip transitions for theme toggle button to avoid conflicts */
+[data-theme-toggle] * {
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out !important;
+}
+
+/* Scrollbar styling */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(156 163 175) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgb(156 163 175);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(107 114 128);
+}
+
+/* Modo oscuro básico */
+.dark body {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0.1;
+    transform: scale(0.95);
+  }
+}
+
+/* Filtros avanzados: estilos para sliders y rating */
+.filter-section {
+  @apply flex flex-col gap-4 p-4 bg-white dark:bg-gray-900 rounded-xl shadow border border-gray-100 dark:border-gray-800;
+}
+.filter-label {
+  @apply text-xs font-medium text-gray-600 dark:text-gray-300 mb-1;
+}
+.filter-range {
+  @apply flex items-center gap-2;
+}
+.filter-range input[type="range"] {
+  width: 100%;
+  accent-color: #6366f1; /* indigo-500 */
+  background: transparent;
+}
+.filter-range-value {
+  @apply text-xs text-gray-700 dark:text-gray-200 px-2;
+}
+.filter-rating {
+  @apply flex items-center gap-1;
+}
+.filter-rating-star {
+  @apply text-yellow-400 text-base cursor-pointer transition;
+}
+.filter-rating-star.inactive {
+  @apply text-gray-300 dark:text-gray-600;
+}
+.filter-rating-label {
+  @apply text-xs text-gray-600 dark:text-gray-300 ml-2;
+}
