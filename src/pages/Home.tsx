@@ -1,13 +1,20 @@
 import React, { useEffect } from 'react';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const Home: React.FC<{ onNavigate: (page: 'home' | 'kanban' | 'products' | 'theme') => void }> = ({ onNavigate }) => {
   const { setPageTitle } = usePageTitle();
   useEffect(() => { setPageTitle('Bienvenido'); }, [setPageTitle]);
 
   return (
-    <div className="space-y-12 max-w-5xl mx-auto px-4 py-10">
+    <motion.div 
+    className="space-y-12 max-w-5xl mx-auto px-4 py-10"
+    initial={{ opacity: 0, y: 24 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -24 }}
+    transition={{ duration: 0.35, ease: 'easeInOut' }}
+    >
       {/* Hero Section */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-gradient-to-r from-pink-100/80 via-white to-indigo-100/80 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900 rounded-3xl shadow-xl p-8">
         <div className="flex-1 text-center md:text-left">
@@ -229,7 +236,7 @@ const Home: React.FC<{ onNavigate: (page: 'home' | 'kanban' | 'products' | 'them
       </div>
 
     
-    </div>
+    </motion.div>
   );
 };
 

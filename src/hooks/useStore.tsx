@@ -9,6 +9,7 @@ interface CartItem {
   title: string;
   price: number;
   thumbnail: string;
+  quantity: number;
 }
 
 interface ProductFilters {
@@ -52,10 +53,12 @@ export interface Product {
 
 interface StoreState {
   cart: CartItem[];
-  addToCart: (item: CartItem) => void;
+  addToCart: (item: Omit<CartItem, 'quantity'>) => void;
   removeFromCart: (id: number) => void;
   clearCart: () => void;
   setCart: (cart: CartItem[]) => void;
+  incrementCartItem: (id: number) => void;
+  decrementCartItem: (id: number) => void;
 
   filters: ProductFilters;
   setFilters: (filters: ProductFilters) => void;
@@ -164,9 +167,30 @@ export const useStore = create<StoreState>((set, get) => ({
   // estado y acciones para carrito y filtros de productos
   cart: [],
   addToCart: (item) => set((state) => {
-    // agrega un producto al carrito (sin duplicados)
-    if (state.cart.some((i) => i.id === item.id)) return state;
-    const newCart = [...state.cart, item];
+    // Si ya existe, aumenta la cantidad
+    const existing = state.cart.find(i => i.id === item.id);
+    let newCart;
+    if (existing) {
+      newCart = state.cart.map(i =>
+        i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+      );
+    } else {
+      newCart = [...state.cart, { ...item, quantity: 1 }];
+    }
+    localStorage.setItem('cart', JSON.stringify(newCart));
+    return { cart: newCart };
+  }),
+  incrementCartItem: (id) => set((state) => {
+    const newCart = state.cart.map(i =>
+      i.id === id ? { ...i, quantity: i.quantity + 1 } : i
+    );
+    localStorage.setItem('cart', JSON.stringify(newCart));
+    return { cart: newCart };
+  }),
+  decrementCartItem: (id) => set((state) => {
+    let newCart = state.cart.map(i =>
+      i.id === id ? { ...i, quantity: i.quantity - 1 } : i
+    ).filter(i => i.quantity > 0);
     localStorage.setItem('cart', JSON.stringify(newCart));
     return { cart: newCart };
   }),

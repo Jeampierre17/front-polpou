@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import type { KanbanTask } from '../hooks/useStore';
 import { useKanbanTasks, useKanbanFilters } from '../hooks/useKanbanStore';
 import KanbanColumn from '../components/KanbanColumn';
@@ -8,6 +9,7 @@ import { DndContext, DragOverlay } from '@dnd-kit/core';
 import type { DragEndEvent } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
 import TaskCard from '../components/TaskCard';
+import { motion } from 'framer-motion';
 
 import { usePageTitle } from '../hooks/usePageTitle';
 import { Dialog, Transition, Listbox } from '@headlessui/react';
@@ -46,14 +48,17 @@ const Kanban: React.FC = () => {
   const addTask = (task: Omit<KanbanTask, 'id' | 'createdAt' | 'updatedAt'>) => {
     addKanbanTask(task);
     setShowForm(false);
+    toast.success('Tarea creada con éxito');
   };
 
   const updateTask = (id: string, updates: Partial<KanbanTask>) => {
     updateKanbanTask(id, updates);
+    toast.success('Tarea actualizada');
   };
 
   const deleteTask = (id: string) => {
     deleteKanbanTask(id);
+    toast.success('Tarea eliminada');
   };
 
   const moveTask = (taskId: string, newStatus: KanbanTask['status']) => {
@@ -139,6 +144,13 @@ const Kanban: React.FC = () => {
   const doneTasks = filteredTasks.filter(task => task.status === 'done');
 
   return (
+     <motion.div 
+       
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -24 }}
+        transition={{ duration: 0.35, ease: 'easeInOut' }}
+        >
     <DndContext
       onDragStart={event => {
         const task = kanbanTasks.find(t => t.id === event.active.id);
@@ -394,7 +406,7 @@ const Kanban: React.FC = () => {
           ) : null}
         </DragOverlay>
       </div>
-    </DndContext>
+    </DndContext></motion.div>
   );
 };
 

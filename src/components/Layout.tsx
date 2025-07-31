@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import AnimatedPage from './AnimatedPage';
 import { Link } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 import { HomeIcon, ViewColumnsIcon, ShoppingBagIcon, SwatchIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
@@ -7,7 +9,6 @@ const navigationItems = [
   { path: '/', label: 'Inicio', icon: HomeIcon },
   { path: '/kanban', label: 'Kanban', icon: ViewColumnsIcon },
   { path: '/products', label: 'Productos', icon: ShoppingBagIcon },
-  { path: '/theme', label: 'Manual de Estilo', icon: SwatchIcon },
 ];
 
 import { usePageTitle } from '../hooks/usePageTitle';
@@ -111,8 +112,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl px-6 sm:px-2 lg:px-8  lg:mx-auto py-4 flex-1">
-        {children}
+      <main className="max-w-7xl px-6 sm:px-2 lg:px-8  lg:mx-auto py-4 flex-1 relative overflow-x-clip">
+        <AnimatePresence mode="wait" initial={false}>
+          <AnimatedPage key={location.pathname} className="h-full w-full">
+            {children}
+          </AnimatedPage>
+        </AnimatePresence>
       </main>
 
       {/* Footer */}

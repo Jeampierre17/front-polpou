@@ -1,12 +1,19 @@
-import React, { useState, useEffect, Suspense, useCallback } from 'react';
+import React, { useState, useEffect, Suspense, useCallback, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { useCart } from '../hooks/useCart';
 import { useProducts } from '../hooks/useProducts';
 import type { Product } from '../types';
 import { Dialog, Transition } from '@headlessui/react';
+import CartModal from '../components/CartModal';
 import { useSearchParams } from 'react-router-dom';
 import ProductFilters from '../components/ProductFilters';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import SkeletonCard from '../components/SkeletonCard';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { toast } from 'sonner';
+import { Toaster } from 'sonner';
+import { ShoppingCartIcon } from '@heroicons/react/24/solid';
 const VirtualizedProductGrid = React.lazy(() => import('../components/VirtualizedProductGrid'));
 const VirtualizedProductList = React.lazy(() => import('../components/VirtualizedProductList'));
 
@@ -15,7 +22,7 @@ const Products: React.FC = () => {
   useEffect(() => { setPageTitle('Catálogo de Productos'); }, [setPageTitle]);
   // Productos, filtros y loading centralizados en el hook
   const { products, isLoading, isError, filters, setFilters } = useProducts();
-  const { cart, addToCart, clearCart } = useCart();
+  const { cart, addToCart, clearCart, incrementCartItem, decrementCartItem } = useCart();
   const [showCart, setShowCart] = useState(false);
   // Paginación
   const PRODUCTS_PER_PAGE = 20;
@@ -35,23 +42,46 @@ const Products: React.FC = () => {
     // eslint-disable-next-line
   }, [filters]);
 
+
+  // Memoizar productos paginados para mantener referencias estables
+  const paginatedProducts = useMemo(() => {
+    // Creamos un Map para mantener la referencia original de cada producto por id
+    const productMap = new Map<number, Product>();
+    (products as Product[]).forEach(p => productMap.set(p.id, p));
+    const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
+    const end = currentPage * PRODUCTS_PER_PAGE;
+    return (products as Product[]).slice(start, end).map(p => productMap.get(p.id)!);
+  }, [products, currentPage]);
+
   // Categorías únicas (ya viene de useProducts si lo exporta, si no, mantener esto)
-  const categories = Array.from(new Set((products as Product[]).map(p => p.category))).filter((c): c is string => typeof c === 'string');
+  const categories = useMemo(() => Array.from(new Set((products as Product[]).map(p => p.category))).filter((c): c is string => typeof c === 'string'), [products]);
 
   // Handler para agregar al carrito (memorizado para evitar rerender innecesario de ProductCard)
   const handleAddToCart = useCallback((productId: number) => {
     const prod = products.find(p => p.id === productId);
-    if (!prod) return;
+    if (!prod) {
+      toast.error('No se encontró el producto.');
+      return;
+    }
     addToCart({
       id: prod.id,
       title: prod.title,
       price: prod.price * (1 - (prod.discountPercentage || 0) / 100),
       thumbnail: prod.thumbnail ?? ''
     });
+    toast.success(`Agregado al carrito: ${prod.title}`);
   }, [products, addToCart]);
 
   return (
-    <div className="h-full">
+    <>
+      <Toaster position="top-right" richColors closeButton />
+      <motion.div
+        className="h-full"
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -24 }}
+        transition={{ duration: 0.35, ease: 'easeInOut' }}
+      >
       {/* Header */}
       {/* Header eliminado, el título ahora va en el navbar */}
 
@@ -89,9 +119,14 @@ const Products: React.FC = () => {
       <main className="flex-1 px-0 md:px-2 xl:px-0 max-w-full md:max-w-3xl xl:max-w-7xl mx-auto">
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-24 text-center min-h-[340px]">
-            <svg className="animate-spin h-14 w-14 text-pink-500 mb-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" strokeWidth="4" className="opacity-25" /><path d="M4 12a8 8 0 018-8" strokeWidth="4" className="opacity-75" /></svg>
+            <LoadingSpinner className="mb-6 w-16 h-16 text-pink-500" />
             <h3 className="text-2xl font-bold text-pink-600 dark:text-pink-400 mb-2 flex items-center gap-2">Cargando catálogo...</h3>
-            <p className="text-gray-500 dark:text-gray-400 mb-4">Por favor espera, estamos trayendo los mejores productos </p>
+            <p className="text-gray-500 dark:text-gray-400 mb-4">Por favor espera, estamos trayendo los mejores productos</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mt-8 w-full max-w-7xl">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </div>
           </div>
         ) : isError ? (
           <div className="flex flex-col items-center justify-center py-24 text-center min-h-[340px]">
@@ -133,9 +168,9 @@ const Products: React.FC = () => {
                 </div>
               }>
                 <VirtualizedProductList
-                  products={(products as Product[]).slice((currentPage - 1) * PRODUCTS_PER_PAGE, currentPage * PRODUCTS_PER_PAGE)}
+                  products={paginatedProducts}
                   onAddToCart={handleAddToCart}
-                  height={Math.min(3, products.slice((currentPage - 1) * PRODUCTS_PER_PAGE, currentPage * PRODUCTS_PER_PAGE).length) * 340 + 16}
+                  height={Math.min(3, paginatedProducts.length) * 340 + 16}
                   itemHeight={340}
                 />
               </Suspense>
@@ -149,7 +184,7 @@ const Products: React.FC = () => {
                 </div>
               }>
                 <VirtualizedProductGrid
-                  products={(products as Product[]).slice((currentPage - 1) * PRODUCTS_PER_PAGE, currentPage * PRODUCTS_PER_PAGE)}
+                  products={paginatedProducts}
                   onAddToCart={handleAddToCart}
                 />
               </Suspense>
@@ -216,94 +251,14 @@ const Products: React.FC = () => {
         className="fixed bottom-6 right-6 z-50 bg-pink-600 hover:bg-pink-700 text-white rounded-full shadow-lg flex items-center gap-2 px-5 py-3 font-semibold text-base md:text-lg transition-all"
         style={{ boxShadow: '0 4px 24px 0 rgba(0,0,0,0.12)' }}
       >
-        🛒
+         <ShoppingCartIcon className="w-6 h-6" />
         <span className="ml-1">Carrito</span>
         {cart.length > 0 && <span className="ml-2 bg-white text-pink-600 rounded-full px-2 py-0.5 text-xs font-bold">{cart.length}</span>}
       </button>
 
-      {/* Modal moderno y amplio del carrito */}
-      <Suspense fallback={
-        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/40 text-white text-xl">
-          <svg className="animate-spin h-12 w-12 text-pink-400 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" strokeWidth="4" className="opacity-25" /><path d="M4 12a8 8 0 018-8" strokeWidth="4" className="opacity-75" /></svg>
-          <span className="text-pink-200 font-semibold text-2xl flex items-center gap-2">✅ Cargando carrito...</span>
-        </div>
-      }>
-        <Transition show={showCart} as={React.Fragment}>
-          <Dialog as="div" className="fixed inset-0 z-[100] overflow-y-auto" onClose={setShowCart}>
-            <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-              {/* Fondo oscuro */}
-              <Transition
-                show={showCart}
-                as={React.Fragment}
-                enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100"
-                leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0"
-              >
-                <div className="fixed inset-0 bg-black bg-opacity-40 transition-opacity" />
-              </Transition>
-              <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-              {/* Contenido del modal */}
-              <Transition
-                show={showCart}
-                as={React.Fragment}
-                enter="ease-out duration-300" enterFrom="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95" enterTo="opacity-100 translate-y-0 sm:scale-100"
-                leave="ease-in duration-200" leaveFrom="opacity-100 translate-y-0 sm:scale-100" leaveTo="opacity-0 translate-y-8 sm:translate-y-0 sm:scale-95"
-              >
-                <div className="inline-block align-bottom bg-white dark:bg-gray-700 rounded-3xl px-6 pt-8 pb-6 text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle w-full max-w-lg md:max-w-xl">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                      <span className="text-3xl md:text-4xl text-pink-600">🛒</span>
-                      <Dialog.Title as="h3" className="text-2xl md:text-3xl font-bold leading-7 text-gray-900 dark:text-white">Carrito</Dialog.Title>
-                    </div>
-                    <button onClick={() => setShowCart(false)} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition">
-                      <span className="text-2xl">×</span>
-                    </button>
-                  </div>
-                  {cart.length === 0 ? (
-                    <div className="text-center text-gray-500 dark:text-gray-400 py-12 text-lg">El carrito está vacío.</div>
-                  ) : (
-                    <>
-                      <div className="flex flex-col gap-5 max-h-[340px] md:max-h-[420px] overflow-y-auto pr-1">
-                        {cart.map(item => (
-                          <div key={item.id} className="flex items-center gap-4 border-b border-gray-100 dark:border-gray-800 pb-3 last:border-b-0">
-                            <img src={item.thumbnail} alt={item.title} className="w-20 h-20 object-cover rounded-xl bg-gray-100 dark:bg-gray-800 flex-shrink-0" />
-                            <div className="flex-1 min-w-0">
-                              <div className="font-semibold text-gray-900 dark:text-white text-base md:text-lg leading-tight line-clamp-2">{item.title}</div>
-                              <div className="text-pink-600 dark:text-pink-400 font-bold text-lg md:text-xl mt-1">{item.price.toLocaleString('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      {/* Total y acciones */}
-                      <div className="mt-8 flex flex-col gap-4">
-                        <div className="flex justify-between items-center text-lg md:text-xl font-bold border-t border-gray-200 dark:border-gray-800 pt-4">
-                          <span>Total</span>
-                          <span className="text-pink-600 dark:text-pink-400">{cart.reduce((acc, item) => acc + item.price, 0).toLocaleString('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                        </div>
-                        <div className="flex gap-3 mt-2">
-                          <button
-                            onClick={clearCart}
-                            className="flex-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-200 rounded-xl px-4 py-3 font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition text-base md:text-lg"
-                            disabled={cart.length === 0}
-                          >
-                            Vaciar carrito
-                          </button>
-                          <button
-                            onClick={() => setShowCart(false)}
-                            className="flex-1 bg-pink-600 hover:bg-pink-700 text-white rounded-xl px-4 py-3 font-bold text-base md:text-lg transition"
-                          >
-                            Cerrar
-                          </button>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </Transition>
-            </div>
-          </Dialog>
-        </Transition>
-      </Suspense>
-    </div>
+      <CartModal show={showCart} onClose={() => setShowCart(false)} />
+      </motion.div>
+    </>
   );
 };
 
